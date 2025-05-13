@@ -12,14 +12,27 @@ final class ShowsViewModel: ObservableObject {
     private let service: ShowsServiceProtocol
     private var currentPage: Int = 0
     private var isEndList: Bool = false
-    
-    @Published var title = "TV Shows"
+    let title = "TV Shows"
+    //TODO: - check if needed
     @Published var shows: [Show] = []
-    @Published var isloading: Bool = false
-    @Published var isLoadingPage: Bool = false
+    @Published var state: ShowsViewState
+    
+    enum ShowsViewState {
+        case loading
+        case loadingPage
+        case success(shows: [Show])
+        case empty(title: String, message: String?)
+        case error(title: String, message: String?, action: (()->())?)
+        
+        var isLoadingPage: Bool {
+            if case .loadingPage = self { return true }
+            return false
+        }
+    }
     
     init(service: ShowsServiceProtocol) {
         self.service = service
+        self.state = .loading
     }
     
     func isLastShowShown(_ show: Show) -> Bool {
@@ -31,17 +44,14 @@ final class ShowsViewModel: ObservableObject {
     }
     
     func fetchMoreShows() async {
-        guard !isLoadingPage, !isEndList else { return }
+        guard !state.isLoadingPage, !isEndList else { return }
         
-        isLoadingPage = true
+        state = .loadingPage
         await fetchShows()
-        isLoadingPage = false
     }
     
     func fetchInitialShowsPage() async {
-        isloading = true
         await fetchShows()
-        isloading = false
     }
 }
 
@@ -49,20 +59,52 @@ private extension ShowsViewModel {
     func fetchShows() async {
         do {
             let shows = try await service.fetchShows(page: currentPage)
-            
-            if shows.isEmpty {
-                // FIXME: - empty state view
-            } else {
-                currentPage += 1
-                // TODO: -  check repetition of items
-                self.shows.append(contentsOf: shows)
-            }
+            handleSuccess(for: shows)
         } catch {
-            // FIXME: - handle error
-            print("Error: \(error.localizedDescription)")
-            if let error = error as? HTTPURLResponse, error.statusCode == 404 {
-                isEndList = true
-            }
+            handleError(error)
         }
+    }
+    
+    func handleSuccess(for shows: [Show]) {
+        if shows.isEmpty {
+            state = .empty(title: "No shows found", message: nil)
+        } else {
+            currentPage += 1
+            // TODO: -  check repetition of items
+            self.shows.append(contentsOf: shows)
+            state = .success(shows: self.shows)
+        }
+    }
+    
+    func retry() {
+        switch state {
+        case .error where shows.isEmpty:
+            state = .loading
+            Task { await fetchShows() }
+        case .error where !shows.isEmpty:
+            Task { await fetchMoreShows() }
+        default:
+            break
+        }
+    }
+    
+    func handleError(_ error: Error) {
+        switch error as? NetworkError {
+        case .invalidResponse(let statusCode):
+            if statusCode == 404 {
+                self.isEndList = true
+            } else {
+                self.setErrorState(error)
+            }
+        default:
+            self.setErrorState(error)
+        }
+    }
+    
+    func setErrorState(_ error: Error) {
+        guard let error = error as? NetworkError, let description = error.description else { return }
+        self.state = .error(title: "Something went wrong",
+                            message: "\(description)",
+                            action: error.shouldRetry ? { self.retry() } : nil)
     }
 }
