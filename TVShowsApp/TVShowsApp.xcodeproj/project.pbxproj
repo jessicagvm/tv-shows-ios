@@ -29,6 +29,23 @@
 		9E92B0192DCFED93008263FA /* TVShowsAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TVShowsAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		9E4443C62DD300370010DDB2 /* Exceptions for "TVShowsAppTests" folder in "TVShowsApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Mocks/MockShowsService.swift,
+			);
+			target = 9E92AFFE2DCFED91008263FA /* TVShowsApp */;
+		};
+		9E4443C72DD300370010DDB2 /* Exceptions for "TVShowsAppTests" folder in "TVShowsAppTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Mocks/MockShowsService.swift,
+			);
+			target = 9E92B00E2DCFED93008263FA /* TVShowsAppTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		9E92B0012DCFED91008263FA /* TVShowsApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -37,6 +54,10 @@
 		};
 		9E92B0122DCFED93008263FA /* TVShowsAppTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9E4443C62DD300370010DDB2 /* Exceptions for "TVShowsAppTests" folder in "TVShowsApp" target */,
+				9E4443C72DD300370010DDB2 /* Exceptions for "TVShowsAppTests" folder in "TVShowsAppTests" target */,
+			);
 			path = TVShowsAppTests;
 			sourceTree = "<group>";
 		};
