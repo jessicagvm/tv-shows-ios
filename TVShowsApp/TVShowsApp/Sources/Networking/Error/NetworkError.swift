@@ -37,11 +37,6 @@ extension NetworkError: LocalizedError, Equatable {
         }
     }
     
-    var isInvalidResponse: Bool {
-        if case .invalidResponse = self { return true }
-        return false
-    }
-    
     var shouldRetry: Bool {
         switch self {
         case .noInternet, .unknown, .timeout, .decodingError:
