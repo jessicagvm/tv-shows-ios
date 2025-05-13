@@ -35,7 +35,7 @@ struct ErrorView: View {
                         .padding()
                         .frame(height: 34)
                         .frame(maxWidth: 120)
-                        .background(Color.gray)
+                        .background(Color.secondary)
                         .foregroundColor(.white)
                         .cornerRadius(12)
                 }
