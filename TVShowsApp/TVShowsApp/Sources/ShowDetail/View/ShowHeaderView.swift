@@ -1,18 +1,18 @@
 //
-//  ShowListCellView.swift
+//  ShowHeaderView.swift
 //  TVShowsApp
 //
-//  Created by Jessica Vasquez on 10/05/2025.
+//  Created by Jessica Vasquez on 11/05/2025.
 //
 
 import SwiftUI
 
-struct ShowListCellView: View {
-    let show: Show
+struct ShowHeaderView: View {
+    let detail: ShowDetailViewData
     
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
-            AsyncRemoteImage(url: URL(string: show.image?.medium ?? ""))
+            AsyncRemoteImage(url: detail.imageURL)
                 .foregroundColor(.secondary)
                 .frame(height: 120)
                 .frame(maxWidth: 100)
@@ -20,24 +20,20 @@ struct ShowListCellView: View {
                 .cornerRadius(8)
                 .shadow(color: .black.opacity(0.6), radius: 4, x: 0, y: 2)
             
-            Text("\(show.name)")
+            Text("\(detail.name)")
                 .multilineTextAlignment(.leading)
                 .foregroundColor(.white)
                 .font(.headline)
                 .fontWeight(.medium)
                 .padding(.horizontal, 8)
         }
-        .frame(height: 192)
         .frame(maxWidth: .infinity)
-        .padding(.horizontal, 16)
-        .padding(.vertical, 8)
-        .cornerRadius(12)
-        .background(Color(white: 0.1))
+        .frame(height: 192)
+        .background(.black)
         .shadow(color: .black.opacity(0.6), radius: 4, x: 0, y: 2)
-        .listRowBackground(Color.clear)
     }
 }
 
 #Preview {
-    ShowListCellView(show: MockedData.shows[0])
+    ShowHeaderView(detail: ShowDetailMapper.map(show: MockedDetailData.detail))
 }

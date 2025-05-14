@@ -1,16 +1,16 @@
 //
-//  ShowsView.swift
+//  ShowDetailView.swift
 //  TVShowsApp
 //
-//  Created by Jessica Vasquez on 10/05/2025.
+//  Created by Jessica Vasquez on 11/05/2025.
 //
 
 import SwiftUI
 
-struct ShowsView: View {
-    @StateObject var viewModel: ShowsViewModel
+struct ShowDetailView: View {
+    @StateObject var viewModel: ShowDetailViewModel
     
-    init(viewModel: ShowsViewModel) {
+    init(viewModel: ShowDetailViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
     
@@ -18,15 +18,14 @@ struct ShowsView: View {
         NavigationStack {
             ZStack {
                 innerView
+                    .padding(.top)
+            }.task {
+                await viewModel.fetchDetail()
             }
-            .navigationTitle(viewModel.title)
             .background(Color.black)
             .toolbarBackground(Color.black, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
-            .task {
-                await viewModel.fetchInitialShowsPage()
-            }
         }
     }
     
@@ -35,18 +34,20 @@ struct ShowsView: View {
         switch viewModel.state {
         case .loading:
             LoadingView()
-        case .loadingPage:
-            LoadingPage()
         case .empty(let title, let message):
+            //FIXME - add ShowContainerView
             EmptyStateView(title: title, message: message)
         case .error(let title, let message, let action):
             ErrorView(title: title, message: message, action: action)
-        case .success(_):
-            ShowListView(viewModel: viewModel)
+        case .success(let detail):
+            VStack(alignment: .leading, spacing: 0) {
+                ShowContainerView(detail: detail)
+                EpisodesListView(detail: detail)
+            }
         }
     }
 }
 
 #Preview {
-    ShowsView(viewModel: ShowsViewModel(service: MockShowsService()))
+    ShowDetailView(viewModel: ShowDetailViewModel(service: MockShowDetailService(), id: 82))
 }

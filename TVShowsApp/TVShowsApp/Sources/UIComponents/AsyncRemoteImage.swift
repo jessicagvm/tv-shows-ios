@@ -30,7 +30,7 @@ struct AsyncRemoteImage: View {
                 .scaledToFill()
         } else {
             //TODO: - add generic placeholder
-            Image("photo")
+            Image(systemName: "photo")
                 .resizable()
                 .scaledToFit()
                 .opacity(0.2)
