@@ -8,12 +8,18 @@
 import SwiftUI
 
 struct EpisodesListView: View {
-    let detail: ShowDetail
+    let detail: ShowDetailViewData
     
     var body: some View {
-        //FIXME: - render by season
-        List(detail.embedded.episodes) { episode in
-            EpisodeCellView(episode: episode)
+        List {
+            ForEach(detail.sections) { section in
+                Section(header: EpisodesSectionView(title: section.title)) {
+                    ForEach(section.episodes) { episode in
+                        EpisodeCellView(episode: episode)
+                    }
+                }
+                
+            }
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
@@ -22,5 +28,5 @@ struct EpisodesListView: View {
 }
 
 #Preview {
-    EpisodesListView(detail: MockedDetailData.detail)
+    EpisodesListView(detail: ShowDetailMapper.map(show: MockedDetailData.detail))
 }

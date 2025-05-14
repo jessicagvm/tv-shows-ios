@@ -8,25 +8,24 @@
 import SwiftUI
 
 struct ShowInfoView: View {
-    let detail: ShowDetail
+    let detail: ShowDetailViewData
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Spacer()
-            //FIXME: - text formatter for all
-            Text("\(detail.summary?.strippedHTML ?? "")")
+            Text("\(detail.summary)")
                 .multilineTextAlignment(.leading)
                 .foregroundColor(.white)
                 .font(.footnote)
                 .fontWeight(.regular)
             
-            Text("Genres: \(detail.genres[0])")
+            Text("\(detail.genres)")
                 .multilineTextAlignment(.leading)
                 .foregroundColor(.gray)
                 .font(.caption)
                 .fontWeight(.regular)
             
-            Text("Schedule: \(detail.schedule.days[0]) at \(detail.schedule.time)")
+            Text("\(detail.schedule)")
                 .multilineTextAlignment(.leading)
                 .foregroundColor(.gray)
                 .font(.caption)
@@ -41,5 +40,5 @@ struct ShowInfoView: View {
 }
 
 #Preview {
-    ShowInfoView(detail: MockedDetailData.detail)
+   ShowInfoView(detail: ShowDetailMapper.map(show: MockedDetailData.detail))
 }

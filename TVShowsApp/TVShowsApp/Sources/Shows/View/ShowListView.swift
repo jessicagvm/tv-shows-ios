@@ -13,9 +13,9 @@ struct ShowListView: View {
     var body: some View {
         List(viewModel.shows) { show in
             let service = ShowDetailService(network: NetworkClient(session: URLSession.shared))
-            let ShowViewModel = ShowDetailViewModel(service: service, id: show.id)
+            let showViewModel = ShowDetailViewModel(service: service, id: show.id)
             ZStack {
-                NavigationLink(destination: ShowDetailView(viewModel: ShowViewModel)) {
+                NavigationLink(destination: ShowDetailView(viewModel: showViewModel)) {
                     EmptyView()
                 }
                 .opacity(0)

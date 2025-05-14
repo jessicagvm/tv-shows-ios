@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ShowContainerView: View {
-    let detail: ShowDetail
+    let detail: ShowDetailViewData
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -19,5 +19,5 @@ struct ShowContainerView: View {
 }
 
 #Preview {
-    ShowContainerView(detail: MockedDetailData.detail)
+    ShowContainerView(detail: ShowDetailMapper.map(show: MockedDetailData.detail))
 }

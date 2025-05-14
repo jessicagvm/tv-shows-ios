@@ -17,13 +17,13 @@ struct ShowsView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                inner
+                innerView
             }
+            .navigationTitle(viewModel.title)
             .background(Color.black)
             .toolbarBackground(Color.black, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
-            .navigationTitle(viewModel.title)
             .task {
                 await viewModel.fetchInitialShowsPage()
             }
@@ -31,7 +31,7 @@ struct ShowsView: View {
     }
     
     @ViewBuilder
-    private var inner: some View {
+    private var innerView: some View {
         switch viewModel.state {
         case .loading:
             LoadingView()

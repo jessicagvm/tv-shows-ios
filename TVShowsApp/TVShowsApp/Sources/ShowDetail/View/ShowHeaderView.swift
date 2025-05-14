@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct ShowHeaderView: View {
-    let detail: ShowDetail
+    let detail: ShowDetailViewData
     
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
-            AsyncRemoteImage(url: URL(string: detail.image?.medium ?? ""))
+            AsyncRemoteImage(url: detail.imageURL)
                 .foregroundColor(.secondary)
                 .frame(height: 120)
                 .frame(maxWidth: 100)
@@ -29,11 +29,11 @@ struct ShowHeaderView: View {
         }
         .frame(maxWidth: .infinity)
         .frame(height: 192)
-        .background(Color(white: 0.1))
+        .background(.black)
         .shadow(color: .black.opacity(0.6), radius: 4, x: 0, y: 2)
     }
 }
 
 #Preview {
-    ShowHeaderView(detail: MockedDetailData.detail)
+    ShowHeaderView(detail: ShowDetailMapper.map(show: MockedDetailData.detail))
 }

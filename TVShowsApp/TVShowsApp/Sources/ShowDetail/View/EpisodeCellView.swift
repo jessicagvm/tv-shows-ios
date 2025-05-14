@@ -8,20 +8,18 @@
 import SwiftUI
 
 struct EpisodeCellView: View {
-    let episode: ShowDetail.Episode
+    let episode: EpisodeCellViewData
     
     var body: some View {
         HStack(spacing: 12) {
             Spacer()
-            //TODO: - create url into AsyncRemoteImage
-            AsyncRemoteImage(url: URL(string: episode.image?.medium ?? ""))
+            AsyncRemoteImage(url: episode.imageURL)
                 .foregroundColor(.secondary)
                 .frame(width: 74, height: 100)
                 .clipped()
                 .cornerRadius(8)
-            
             // FIXME:- should handle a title for this view
-            Text("\(episode.number). \(episode.name)")
+            Text("\(episode.subtitle) \(episode.title)")
                 .multilineTextAlignment(.leading)
                 .foregroundColor(.white)
                 .font(.subheadline)
@@ -41,5 +39,5 @@ struct EpisodeCellView: View {
 }
 
 #Preview {
-    EpisodeCellView(episode: MockedDetailData.detail.embedded.episodes[0])
+    EpisodeCellView(episode: ShowDetailMapper.map(show: MockedDetailData.detail).sections[0].episodes[0])
 }

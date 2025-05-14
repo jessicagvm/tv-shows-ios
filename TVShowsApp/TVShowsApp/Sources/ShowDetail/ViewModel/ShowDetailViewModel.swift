@@ -16,7 +16,7 @@ final class ShowDetailViewModel: ObservableObject {
     
     enum ShowDetailViewState {
         case loading
-        case success(detail: ShowDetail)
+        case success(detail: ShowDetailViewData)
         case empty(title: String, message: String?)
         case error(title: String, message: String?, action: (()->())?)
     }
@@ -36,7 +36,7 @@ final class ShowDetailViewModel: ObservableObject {
         }
     }
 }
- 
+
 private extension ShowDetailViewModel {
     func handleSuccess(for detail: ShowDetail?) {
         guard let detail = detail else {
@@ -46,7 +46,8 @@ private extension ShowDetailViewModel {
         }
         
         if !detail.embedded.episodes.isEmpty {
-            state = .success(detail: detail)
+            let data = ShowDetailMapper.map(show: detail)
+            state = .success(detail: data)
         } else {
             state = .empty(title: "No episodes available", message:  nil)
         }
