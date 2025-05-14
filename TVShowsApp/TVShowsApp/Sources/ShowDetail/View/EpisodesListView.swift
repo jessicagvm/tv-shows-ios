@@ -15,10 +15,18 @@ struct EpisodesListView: View {
             ForEach(detail.sections) { section in
                 Section(header: EpisodesSectionView(title: section.title)) {
                     ForEach(section.episodes) { episode in
-                        EpisodeCellView(episode: episode)
+                        ZStack {
+                            NavigationLink(destination: EpisodeView(episode: episode)) {
+                                EmptyView()
+                            }
+                            .opacity(0)
+                            .buttonStyle(PlainButtonStyle())
+                            EpisodeCellView(episode: episode)
+                        }
+                        .listRowBackground(Color.black)
+                        .listRowSeparator(.hidden)
                     }
                 }
-                
             }
         }
         .listStyle(.plain)

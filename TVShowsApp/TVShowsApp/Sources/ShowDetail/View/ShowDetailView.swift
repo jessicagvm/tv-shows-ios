@@ -35,7 +35,7 @@ struct ShowDetailView: View {
         case .loading:
             LoadingView()
         case .empty(let title, let message):
-            //FIXME - add ShowContainerView
+            //TODO: - add ShowContainerView
             EmptyStateView(title: title, message: message)
         case .error(let title, let message, let action):
             ErrorView(title: title, message: message, action: action)

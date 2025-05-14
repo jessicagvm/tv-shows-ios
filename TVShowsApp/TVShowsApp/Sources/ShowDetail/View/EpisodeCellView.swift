@@ -18,8 +18,7 @@ struct EpisodeCellView: View {
                 .frame(width: 74, height: 100)
                 .clipped()
                 .cornerRadius(8)
-            // FIXME:- should handle a title for this view
-            Text("\(episode.subtitle) \(episode.title)")
+            Text("\(episode.formattedTitle)")
                 .multilineTextAlignment(.leading)
                 .foregroundColor(.white)
                 .font(.subheadline)
