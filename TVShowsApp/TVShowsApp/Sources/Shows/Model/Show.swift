@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct Show: Identifiable, Decodable {
+struct Show: Hashable, Identifiable, Decodable {
     let id: Int
     let name: String
     let image: ShowImage?
     
-    struct ShowImage: Decodable {
+    struct ShowImage: Hashable, Decodable {
         let medium: String?
         let original: String?
     }

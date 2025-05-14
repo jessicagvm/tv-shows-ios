@@ -33,6 +33,7 @@
 		9E4443C62DD300370010DDB2 /* Exceptions for "TVShowsAppTests" folder in "TVShowsApp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Mocks/MockShowDetailService.swift,
 				Mocks/MockShowsService.swift,
 			);
 			target = 9E92AFFE2DCFED91008263FA /* TVShowsApp */;
@@ -40,6 +41,7 @@
 		9E4443C72DD300370010DDB2 /* Exceptions for "TVShowsAppTests" folder in "TVShowsAppTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Mocks/MockShowDetailService.swift,
 				Mocks/MockShowsService.swift,
 			);
 			target = 9E92B00E2DCFED93008263FA /* TVShowsAppTests */;
