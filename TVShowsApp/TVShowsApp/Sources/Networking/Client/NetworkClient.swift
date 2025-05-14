@@ -13,7 +13,9 @@ final class NetworkClient: NetworkClientProtocol {
     init(session: URLSession) {
         self.session = session
     }
-    
+}
+
+extension NetworkClient {
     func request<T>(endpoint: Endpoint) async throws -> T where T : Decodable {
         guard let urlRequest = endpoint.getURLRequest() else {
             throw NetworkError.invalidURL
@@ -45,6 +47,23 @@ final class NetworkClient: NetworkClientProtocol {
             default:
                 throw NetworkError.unknown
             }
+        } catch {
+            throw NetworkError.unknown
+        }
+    }
+    
+    func download(from url: URL) async throws -> Data {
+        do {
+            let (data, response) = try await session.data(from: url)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw NetworkError.invalidResponse(statusCode: nil)
+            }
+            
+            guard (200...299).contains(httpResponse.statusCode) else {
+                throw NetworkError.invalidResponse(statusCode: httpResponse.statusCode)
+            }
+            return data
         } catch {
             throw NetworkError.unknown
         }
