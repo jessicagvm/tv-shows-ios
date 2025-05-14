@@ -36,4 +36,16 @@ extension NetworkError: LocalizedError, Equatable {
             return "the url is invalid"
         }
     }
+    
+    var shouldRetry: Bool {
+        switch self {
+        case .noInternet, .unknown, .timeout, .decodingError:
+            return true
+        case .invalidResponse(let statusCode):
+            guard statusCode == 500 else { return false }
+            return true
+        default:
+            return false
+        }
+    }
 }

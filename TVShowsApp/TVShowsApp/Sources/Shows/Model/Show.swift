@@ -10,11 +10,11 @@ import Foundation
 struct Show: Identifiable, Decodable {
     let id: Int
     let name: String
-    let image: ShowImage
+    let image: ShowImage?
     
     struct ShowImage: Decodable {
-        let medium: String
-        let original: String
+        let medium: String?
+        let original: String?
     }
 }
 

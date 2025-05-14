@@ -11,7 +11,7 @@ import SwiftUI
 struct TVShowsApp: App {
     var body: some Scene {
         WindowGroup {
-            ShowsView()
+            ShowsView(viewModel: ShowsViewModel(service: ShowsService(network: NetworkClient(session: URLSession.shared))))
         }
     }
 }

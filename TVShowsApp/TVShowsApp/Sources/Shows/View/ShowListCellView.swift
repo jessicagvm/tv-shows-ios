@@ -20,7 +20,7 @@ struct ShowListCellView: View {
                 .frame(maxWidth: .infinity)
                 .clipped()
                 .cornerRadius(8)
-          
+            
             Text("\(show.name)")
                 .multilineTextAlignment(.leading)
                 .foregroundColor(.white)
@@ -31,8 +31,10 @@ struct ShowListCellView: View {
         .frame(height: 192)
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
-        .background(Color.black)
         .cornerRadius(12)
+        .background(Color(white: 0.1))
+        .shadow(color: .black.opacity(0.6), radius: 4, x: 0, y: 2)
+        .listRowBackground(Color.clear)
     }
 }
 
