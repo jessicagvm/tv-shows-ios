@@ -22,6 +22,7 @@ struct EpisodesListView: View {
                             .opacity(0)
                             .buttonStyle(PlainButtonStyle())
                             EpisodeCellView(episode: episode)
+                                .listRowBackground(Color.clear)
                         }
                         .listRowBackground(Color.black)
                         .listRowSeparator(.hidden)

@@ -18,7 +18,7 @@ struct EpisodesSectionView: View {
         }
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
-        .background(Color(white: 0.1))
+        .background(.clear)
     }
 }
 

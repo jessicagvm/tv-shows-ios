@@ -30,9 +30,9 @@ struct EpisodeCellView: View {
         .frame(height: 122)
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
-        .cornerRadius(12)
         .background(Color(white: 0.1))
         .shadow(color: .black.opacity(0.6), radius: 4, x: 0, y: 2)
+        .cornerRadius(12)
         .listRowBackground(Color.clear)
     }
 }

@@ -32,7 +32,9 @@ struct AsyncRemoteImage: View {
             //TODO: - add generic placeholder
             Image(systemName: "photo")
                 .resizable()
-                .scaledToFit()
+                .scaledToFill()
+                .foregroundColor(.white)
+                .background(Color(white: 0.1))
                 .opacity(0.2)
         }
     }
