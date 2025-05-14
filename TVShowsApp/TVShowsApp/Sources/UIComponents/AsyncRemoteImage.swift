@@ -39,6 +39,6 @@ struct AsyncRemoteImage: View {
 }
 
 #Preview {
-    let url = URL(string: MockedData.shows[0].image.medium)
+    let url = URL(string: MockedData.shows[0].image?.medium ?? "")
     AsyncImage(url: url)
 }
