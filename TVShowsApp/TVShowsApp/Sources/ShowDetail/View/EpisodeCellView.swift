@@ -12,11 +12,11 @@ struct EpisodeCellView: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: "photo")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
+            Spacer()
+            //TODO: - create url into AsyncRemoteImage
+            AsyncRemoteImage(url: URL(string: episode.image?.medium ?? ""))
                 .foregroundColor(.secondary)
-                .frame(width: 50, height: 90)
+                .frame(width: 74, height: 100)
                 .clipped()
                 .cornerRadius(8)
             

@@ -11,15 +11,14 @@ struct ShowListCellView: View {
     let show: Show
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Image(systemName: "photo")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
+        VStack(alignment: .center, spacing: 20) {
+            AsyncRemoteImage(url: URL(string: show.image?.medium ?? ""))
                 .foregroundColor(.secondary)
                 .frame(height: 120)
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: 100)
                 .clipped()
                 .cornerRadius(8)
+                .shadow(color: .black.opacity(0.6), radius: 4, x: 0, y: 2)
             
             Text("\(show.name)")
                 .multilineTextAlignment(.leading)
@@ -29,6 +28,7 @@ struct ShowListCellView: View {
                 .padding(.horizontal, 8)
         }
         .frame(height: 192)
+        .frame(maxWidth: .infinity)
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
         .cornerRadius(12)
