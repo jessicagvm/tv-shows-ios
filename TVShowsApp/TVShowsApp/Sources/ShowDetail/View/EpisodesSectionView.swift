@@ -10,15 +10,17 @@ import SwiftUI
 struct EpisodesSectionView: View {
     let title: String
     var body: some View {
-        VStack{
+        HStack {
             Text("\(title)")
-                .foregroundColor(.white)
+                .foregroundColor(.gray)
                 .font(.subheadline)
                 .fontWeight(.medium)
+            Spacer()
         }
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
         .background(.clear)
+        .padding(.horizontal, 8)
     }
 }
 

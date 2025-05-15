@@ -9,7 +9,7 @@ import Foundation
 enum ShowEndpoint {
     case showList(page: String)
     case showDetail(id: Int)
-    
+    case search(query: String)
 }
 
 extension ShowEndpoint: Endpoint {
@@ -40,6 +40,8 @@ private extension ShowEndpoint {
             return "/shows"
         case .showDetail(let id):
             return "/shows/\(id)"
+        case .search:
+            return "/search/shows"
         }
     }
     
@@ -57,7 +59,8 @@ private extension ShowEndpoint {
             return [URLQueryItem(name: "page", value: query)]
         case .showDetail(_):
             return [URLQueryItem(name: "embed", value: "episodes")]
-            
+        case .search(let query):
+            return [URLQueryItem(name: "q", value: query)]
         }
     }
     
