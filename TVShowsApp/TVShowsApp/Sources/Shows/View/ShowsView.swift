@@ -17,6 +17,9 @@ struct ShowsView: View {
     var body: some View {
         NavigationStack {
             ZStack {
+                Color.black
+                    .ignoresSafeArea()
+                
                 innerView
             }
             .background(Color.black)
