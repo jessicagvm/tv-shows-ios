@@ -13,7 +13,6 @@ struct ShowListCellView: View {
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
             AsyncRemoteImage(url: URL(string: show.image?.medium ?? ""))
-                .foregroundColor(.secondary)
                 .frame(height: 120)
                 .frame(maxWidth: 100)
                 .clipped()
@@ -31,9 +30,9 @@ struct ShowListCellView: View {
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
-        .cornerRadius(12)
         .background(Color(white: 0.1))
         .shadow(color: .black.opacity(0.6), radius: 4, x: 0, y: 2)
+        .cornerRadius(12)
         .listRowBackground(Color.clear)
     }
 }

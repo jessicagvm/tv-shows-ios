@@ -27,7 +27,8 @@ struct ShowDetailMapper {
                         title: $0.name,
                         subtitle: "S\($0.season):E\($0.number)",
                         summary: $0.summary?.strippedHTML ?? "No summary available",
-                        imageURL: URL(string: $0.image?.medium ?? "")
+                        imageURL: URL(string: $0.image?.medium ?? ""), 
+                        formattedTitle: "S\($0.season):E\($0.number) \($0.name)"
                     )
                 }
             

@@ -12,6 +12,7 @@ struct EpisodeCellViewData: Identifiable {
     let subtitle: String
     let summary: String
     let imageURL: URL?
+    let formattedTitle: String
 }
 
 struct SeasonSection: Identifiable {
