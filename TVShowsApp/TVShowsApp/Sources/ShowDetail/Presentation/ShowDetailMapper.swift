@@ -16,7 +16,7 @@ struct ShowDetailMapper {
     }
     
     private static func getSections(for show: ShowDetail) -> [SeasonSection] {
-        let episodes: [ShowDetail.Episode] = show.embedded.episodes
+        let episodes: [ShowDetail.Episode] = show.embedded.episodes.uniqueById()
         let grouped = Dictionary(grouping: episodes) { $0.season }
         
         let sections = grouped.map { (season, episodes) in

@@ -31,7 +31,7 @@ extension NetworkError: LocalizedError, Equatable {
         case .decodingError:
             return "it couldn't process the information received."
         case .unknown:
-            return "Something went wrong. Please try again."
+            return "Please try again."
         case .invalidURL:
             return "the url is invalid"
         }
@@ -39,10 +39,20 @@ extension NetworkError: LocalizedError, Equatable {
     
     var shouldRetry: Bool {
         switch self {
-        case .noInternet, .unknown, .timeout, .decodingError:
+        case .noInternet, .unknown, .timeout:
             return true
         case .invalidResponse(let statusCode):
             guard statusCode == 500 else { return false }
+            return true
+        default:
+            return false
+        }
+    }
+    
+    var isNoFoundError: Bool {
+        switch self {
+        case .invalidResponse(let statusCode):
+            guard statusCode == 400 else { return false }
             return true
         default:
             return false
