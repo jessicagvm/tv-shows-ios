@@ -35,7 +35,11 @@ final class ShowsViewModel: ObservableObject {
     }
     
     func isLastShowShown(_ show: Show) -> Bool {
-        if show.id == self.shows.last?.id {
+        // TODO: - Consider migrating pagination trigger to scroll-based detection
+        let isLastItem = show == self.shows.last
+        let hasMoreThanTwoItems = self.shows.count > 2
+
+        if isLastItem && hasMoreThanTwoItems {
             return true
         }
         
@@ -64,13 +68,29 @@ private extension ShowsViewModel {
         }
     }
     
-    func handleSuccess(for shows: [Show]) {
-        if shows.isEmpty {
-            state = .empty(title: "No shows found", message: nil)
+    func handleSuccess(for fetchedShows: [Show]) {
+        guard fetchedShows.isEmpty else {
+            setMoreShows(for: fetchedShows)
+            return
+        }
+        
+        if self.shows.isEmpty {
+            let error = NetworkError.unknown
+            setErrorState(error)
         } else {
+            state = .success(shows: self.shows)
+        }
+    }
+    
+    func setMoreShows(for fetchedShows: [Show]) {
+        if !fetchedShows.isEmpty {
             currentPage += 1
-            // TODO: -  check repetition of items
-            self.shows.append(contentsOf: shows)
+            
+            var filteredShows: [Show] = self.shows
+            filteredShows.append(contentsOf: fetchedShows)
+            filteredShows = filteredShows.uniqueById()
+              
+            self.shows = filteredShows
             state = .success(shows: self.shows)
         }
     }
@@ -88,21 +108,25 @@ private extension ShowsViewModel {
     }
     
     func handleError(_ error: Error) {
-        switch error as? NetworkError {
-        case .invalidResponse(let statusCode):
-            if statusCode == 404 {
-                self.isEndList = true
-            } else {
-                self.setErrorState(error)
-            }
-        default:
-            self.setErrorState(error)
+        guard self.shows.isEmpty else {
+            handleErrorPreservingCurrentResults(error)
+            return
         }
+        
+        self.setErrorState(error)
+    }
+    
+    func handleErrorPreservingCurrentResults(_ error: Error) {
+        if  let error = error as? NetworkError, error.isNoFoundError {
+            self.isEndList = true
+        }
+        
+        self.state = .success(shows: self.shows)
     }
     
     func setErrorState(_ error: Error) {
         guard let error = error as? NetworkError, let description = error.description else { return }
-        self.state = .error(title: "Something went wrong",
+        self.state = .error(title: "Oops! Something went wrong",
                             message: "\(description)",
                             action: error.shouldRetry ? { self.retry() } : nil)
     }

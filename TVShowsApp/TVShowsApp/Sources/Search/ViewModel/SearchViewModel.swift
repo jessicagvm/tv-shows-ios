@@ -64,7 +64,8 @@ private extension SearchViewModel {
         if results.isEmpty {
             state = .empty(title: "No results found.")
         } else {
-            state = .success(results: results)
+            let filtered = results.uniqueById()
+            state = .success(results: filtered)
         }
     }
     

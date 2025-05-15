@@ -16,6 +16,7 @@ struct ShowMapper {
     }
     
     static func map(shows: [Show]) -> [ShowViewData] {
-        return shows.map { ShowMapper.map(show:$0) }
+        let shows: [Show] = shows.uniqueById()
+        return shows.map { ShowMapper.map(show: $0) }
     }
 }
