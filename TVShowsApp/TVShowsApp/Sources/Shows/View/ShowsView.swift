@@ -19,7 +19,6 @@ struct ShowsView: View {
             ZStack {
                 innerView
             }
-            .navigationTitle(viewModel.title)
             .background(Color.black)
             .toolbarBackground(Color.black, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
@@ -42,7 +41,7 @@ struct ShowsView: View {
         case .error(let title, let message, let action):
             ErrorView(title: title, message: message, action: action)
         case .success(_):
-            ShowListView(viewModel: viewModel)
+            ShowListContainerView(viewModel: viewModel)
         }
     }
 }
