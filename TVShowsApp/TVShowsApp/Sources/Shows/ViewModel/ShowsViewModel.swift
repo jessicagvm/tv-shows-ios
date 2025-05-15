@@ -13,7 +13,6 @@ final class ShowsViewModel: ObservableObject {
     private var currentPage: Int = 0
     private var isEndList: Bool = false
     let title = "TV Shows"
-    //TODO: - check if needed
     @Published var shows: [Show] = []
     @Published var state: ShowsViewState
     

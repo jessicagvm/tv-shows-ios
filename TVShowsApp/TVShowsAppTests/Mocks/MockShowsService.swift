@@ -10,7 +10,6 @@ import Foundation
 struct MockShowsService: ShowsServiceProtocol {
     func fetchShows(page: Int) async throws -> [Show] {
         guard let showsUrl = Bundle.main.url(forResource: "shows_page_0", withExtension: "json") else {
-            //TODO: - review logic
             return []
         }
         

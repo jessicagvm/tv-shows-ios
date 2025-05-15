@@ -10,7 +10,6 @@ import Foundation
 @MainActor
 final class ShowDetailViewModel: ObservableObject {
     private let service: ShowDetailServiceProtocol
-    //TODO: - receive all Show instance
     private let id: Int
     @Published var state: ShowDetailViewState
     
