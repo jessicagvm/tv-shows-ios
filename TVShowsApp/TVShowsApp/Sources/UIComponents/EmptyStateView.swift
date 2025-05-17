@@ -17,18 +17,21 @@ struct EmptyStateView: View {
                 .foregroundColor(.white)
                 .bold()
                 .multilineTextAlignment(.center)
-            
-            if let message = message {
+            messageView
+        }
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.black)
+    }
+    @ViewBuilder
+        private var messageView: some View {
+            if let message {
                 Text(message)
                     .font(.subheadline)
                     .foregroundColor(.gray)
                     .multilineTextAlignment(.center)
             }
         }
-        .padding()
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.black)
-    }
 }
 
 #Preview {
