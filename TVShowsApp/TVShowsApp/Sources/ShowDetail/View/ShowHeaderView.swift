@@ -8,32 +8,38 @@
 import SwiftUI
 
 struct ShowHeaderView: View {
-    let detail: ShowDetailViewData
+    let imageURL: URL?
+    let name: String
     
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
-            AsyncRemoteImage(url: detail.imageURL)
-                .foregroundColor(.secondary)
-                .frame(height: 120)
-                .frame(maxWidth: 100)
-                .clipped()
-                .cornerRadius(8)
-                .shadow(color: .black.opacity(0.6), radius: 4, x: 0, y: 2)
-            
-            Text("\(detail.name)")
-                .multilineTextAlignment(.leading)
-                .foregroundColor(.white)
-                .font(.headline)
-                .fontWeight(.medium)
-                .padding(.horizontal, 8)
+            ShowImageView(imageURL: imageURL)
+            ShowTitleView(name: name)
         }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 46)
         .frame(maxWidth: .infinity)
         .frame(height: 192)
         .background(.black)
         .shadow(color: .black.opacity(0.6), radius: 4, x: 0, y: 2)
+        .overlay(
+            RoundedRectangleView()
+        )
+        .padding(.horizontal, 46)
+        .padding(.vertical, 8)
+        .cornerRadius(8)
+    }
+}
+
+private struct RoundedRectangleView: View {
+    var body: some View {
+        RoundedRectangle(cornerRadius: 8)
+            .stroke(Color.white.opacity(0.3), lineWidth: 1)
+            .shadow(color: .black.opacity(0.6), radius: 4, x: 0, y: 2)
     }
 }
 
 #Preview {
-    ShowHeaderView(detail: ShowDetailMapper.map(show: MockedDetailData.detail))
+    let data = ShowMapper.map(show: MockedData.shows[0])
+    ShowHeaderView(imageURL: data.imageURL, name: data.name)
 }

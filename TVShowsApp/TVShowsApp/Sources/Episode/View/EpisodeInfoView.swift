@@ -14,7 +14,7 @@ struct EpisodeInfoView: View {
         VStack(alignment: .center, spacing: 20) {
             AsyncRemoteImage(url: episode.imageURL)
                 .foregroundColor(.secondary)
-                .frame(height: 200)
+                .frame(height: 160)
                 .frame(maxWidth: 180)
                 .clipped()
                 .cornerRadius(8)

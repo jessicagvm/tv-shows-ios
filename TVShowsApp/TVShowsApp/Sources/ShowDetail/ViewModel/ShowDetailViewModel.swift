@@ -11,22 +11,27 @@ import Foundation
 final class ShowDetailViewModel: ObservableObject {
     private let service: ShowDetailServiceProtocol
     private let id: Int
-    @Published var state: ShowDetailViewState
+    private var hasLoadedOnce = false
+  
+    @Published private(set) var state: ShowDetailViewState = .idle
     
     enum ShowDetailViewState {
+        case idle
         case loading
         case success(detail: ShowDetailViewData)
-        case empty(title: String, message: String?)
-        case error(title: String, message: String?, action: (()->())?)
+        case empty(header: ShowDetailViewData, title: String, message: String?)
+        case error(_ error: ErrorViewData)
     }
     
     init(service: ShowDetailServiceProtocol, id: Int) {
         self.service = service
         self.id = id
-        state = .loading
     }
     
     func fetchDetail() async {
+        guard !hasLoadedOnce else { return }
+        hasLoadedOnce = true
+        state = .loading
         do {
             let detail = try await service.fetchShowDetailBy(id: self.id)
             handleSuccess(for: detail)
@@ -44,11 +49,11 @@ private extension ShowDetailViewModel {
             return
         }
         
+        let data = ShowDetailMapper.map(show: detail)
         if !detail.embedded.episodes.isEmpty {
-            let data = ShowDetailMapper.map(show: detail)
             state = .success(detail: data)
         } else {
-            state = .empty(title: "No episodes available", message:  nil)
+            state = .empty(header: data, title: "No episodes available", message:  nil)
         }
     }
     
@@ -57,14 +62,14 @@ private extension ShowDetailViewModel {
     }
     
     func retry() {
-        state = .loading
         Task { await fetchDetail() }
     }
     
     func setErrorState(_ error: Error) {
         guard let error = error as? NetworkError, let description = error.description else { return }
-        self.state = .error(title: "Something went wrong",
+        let errorViewData = ErrorViewData(title: "Something went wrong",
                             message: "\(description)",
                             action: error.shouldRetry ? { self.retry() } : nil)
+        self.state = .error(errorViewData)
     }
 }

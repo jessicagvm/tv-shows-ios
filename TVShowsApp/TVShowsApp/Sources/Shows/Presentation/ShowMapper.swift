@@ -19,4 +19,13 @@ struct ShowMapper {
         let shows: [Show] = shows.uniqueById()
         return shows.map { ShowMapper.map(show: $0) }
     }
+    
+    static func mapAvailableShows(_ shows: [Show]) -> ShowsViewData? {
+        let mappedShows = ShowMapper.map(shows: shows)
+        guard let last = mappedShows.last else {
+            return nil
+        }
+       
+        return ShowsViewData(shows: mappedShows, title: "For You", recommendedShow: last)
+    }
 }

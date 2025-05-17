@@ -27,15 +27,9 @@ struct AsyncRemoteImage: View {
         if let image = imageLoader.image {
             Image(uiImage: image)
                 .resizable()
-                .scaledToFill()
+                .aspectRatio(contentMode: .fit)
         } else {
-            //TODO: - add generic placeholder
-            Image(systemName: "photo")
-                .resizable()
-                .scaledToFill()
-                .foregroundColor(.white)
-                .background(Color(white: 0.1))
-                .opacity(0.2)
+            Color.gray
         }
     }
 }

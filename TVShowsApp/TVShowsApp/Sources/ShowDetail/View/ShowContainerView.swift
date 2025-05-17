@@ -12,7 +12,7 @@ struct ShowContainerView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            ShowHeaderView(detail: detail)
+            ShowHeaderView(imageURL: detail.imageURL, name: detail.name)
             ShowInfoView(detail: detail)
         }
     }

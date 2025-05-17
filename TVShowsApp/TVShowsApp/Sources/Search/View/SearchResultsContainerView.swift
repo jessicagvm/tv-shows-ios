@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SearchResultsContainerView: View {
-    let results: [SearchResult]
+    let results: [SearchResultViewData]
     var body: some View {
         VStack(alignment: .leading) {
             SearchSubtitleView(text: "Top Results")
@@ -18,5 +18,5 @@ struct SearchResultsContainerView: View {
 }
 
 #Preview {
-    SearchResultsContainerView(results: [SearchResult.init(show: MockedData.shows[0])])
+    SearchResultsContainerView(results: [SearchResultViewData.init(show: ShowMapper.map(show: MockedData.shows[0]))])
 }

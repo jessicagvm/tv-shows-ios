@@ -12,7 +12,7 @@ struct RecommendedShowsContainerView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             SearchSubtitleView(text: "Recommended TV Shows")
-            RecommendedShowList(recommendedShows: recommendedShows)
+            RecommendedShowListView(recommendedShows: recommendedShows)
         }
     }
 }

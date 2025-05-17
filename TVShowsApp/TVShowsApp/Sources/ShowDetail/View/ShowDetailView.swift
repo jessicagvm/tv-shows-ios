@@ -32,19 +32,26 @@ struct ShowDetailView: View {
     @ViewBuilder
     private var innerView: some View {
         switch viewModel.state {
-        case .loading:
+        case .idle, .loading:
             LoadingView()
-        case .empty(let title, let message):
-            //TODO: - add ShowContainerView
-            EmptyStateView(title: title, message: message)
-        case .error(let title, let message, let action):
-            ErrorView(title: title, message: message, action: action)
+        case .empty(let header, let title, let message):
+            ShowDetailEmptyStateView(header: header, title: title, message: message)
+        case .error(let error):
+            ErrorView(error: error)
         case .success(let detail):
             VStack(alignment: .leading, spacing: 0) {
                 ShowContainerView(detail: detail)
                 EpisodesListView(detail: detail)
             }
         }
+    }
+}
+
+extension ShowDetailView {
+    static func build(for show: ShowViewData) -> some View {
+        let service = ShowDetailService(network: NetworkClient(session: URLSession.shared))
+        let showViewModel = ShowDetailViewModel(service: service, id: show.id)
+        return ShowDetailView(viewModel: showViewModel)
     }
 }
 

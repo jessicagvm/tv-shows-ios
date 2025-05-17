@@ -13,7 +13,6 @@ protocol ImageCacheProtocol {
 }
 
 final class ImageCache: ImageCacheProtocol {
-    // TODO: - implement EnvironmentObject
     private let cache = NSCache<NSURL, UIImage>()
     static let shared = ImageCache()
     

@@ -15,6 +15,7 @@ struct SearchBarView: View {
         HStack {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.gray)
+                .frame(width: 24, height: 24)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 8)
             

@@ -12,17 +12,12 @@ struct EpisodeView: View {
     
     var body: some View {
         NavigationStack {
-            innerView
+            EpisodeInfoView(episode: episode)
                 .background(Color.black)
                 .toolbarBackground(Color.black, for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
                 .toolbarColorScheme(.dark, for: .navigationBar)
         }
-    }
-    
-    @ViewBuilder
-    private var innerView: some View {
-        EpisodeInfoView(episode: episode)
     }
 }
 

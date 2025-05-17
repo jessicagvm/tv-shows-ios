@@ -6,8 +6,9 @@
 //
 import Foundation
 
-struct ShowViewData: Hashable, Identifiable, Decodable {
+struct ShowViewData: Equatable, Hashable, Identifiable {
     let id: Int
     let name: String
     let imageURL: URL?
 }
+

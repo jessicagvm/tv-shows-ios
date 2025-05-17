@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct EpisodeCellViewData: Identifiable {
+struct EpisodeCellViewData: Identifiable, Equatable {
     let id: Int
     let title: String
     let subtitle: String
@@ -15,13 +15,13 @@ struct EpisodeCellViewData: Identifiable {
     let formattedTitle: String
 }
 
-struct SeasonSection: Identifiable {
+struct SeasonSection: Identifiable, Equatable {
     let id: Int
     let title: String
     let episodes: [EpisodeCellViewData]
 }
 
-struct ShowDetailViewData {
+struct ShowDetailViewData: Equatable {
     let name: String
     let summary: String
     let imageURL: URL?
