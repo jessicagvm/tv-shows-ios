@@ -30,11 +30,18 @@ struct SearchView: View {
             .focused($isSearchFocused)
             .toolbarBackground(Color.black, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    isSearchFocused = true
-                }
+            .task {
+                await delayFocus()
             }
+        }
+    }
+    
+    private func delayFocus() async {
+        do {
+            try await Task.sleep(nanoseconds: 500_000_000)
+            isSearchFocused = true
+        } catch {
+            print("Cancelled")
         }
     }
     
@@ -42,8 +49,7 @@ struct SearchView: View {
     private var innerView: some View {
         switch viewModel.state {
         case .initial(let recommended):
-            let values = viewModel.getRecommededShows(for: recommended)
-            RecommendedShowsContainerView(recommendedShows: values)
+            RecommendedShowsContainerView(recommendedShows: recommended)
         case .loading:
             LoadingView()
         case .empty(let title):
@@ -56,6 +62,14 @@ struct SearchView: View {
     }
 }
 
+extension SearchView {
+    static func build(for shows: [ShowViewData]) -> some View {
+        let service = SearchService(network: NetworkClient(session: URLSession.shared))
+        let viewModel = SearchViewModel(service: service, recommededShows: shows)
+        return SearchView(viewModel: viewModel)
+    }
+}
+
 #Preview {
-    SearchView(viewModel: SearchViewModel(service: MockSearchService(), recommededShows: MockedData.shows))
+    SearchView(viewModel: SearchViewModel(service: MockSearchService(), recommededShows: ShowMapper.map(shows: MockedData.shows)))
 }

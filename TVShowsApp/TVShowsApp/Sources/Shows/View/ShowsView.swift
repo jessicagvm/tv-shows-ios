@@ -19,7 +19,6 @@ struct ShowsView: View {
             ZStack {
                 Color.black
                     .ignoresSafeArea()
-                
                 innerView
             }
             .background(Color.black)
@@ -35,17 +34,29 @@ struct ShowsView: View {
     @ViewBuilder
     private var innerView: some View {
         switch viewModel.state {
-        case .loading:
+        case .loading, .idle:
             LoadingView()
-        case .loadingPage:
-            LoadingPage()
         case .empty(let title, let message):
             EmptyStateView(title: title, message: message)
-        case .error(let title, let message, let action):
-            ErrorView(title: title, message: message, action: action)
-        case .success(_):
-            ShowListContainerView(viewModel: viewModel)
+        case .error(let error):
+            ErrorView(error: error)
+        case .success(let viewData):
+            ScrollView(showsIndicators: false) {
+                VStack (spacing: 0) {
+                    ShowsHeaderContainerView(viewData: viewData)
+                    ShowListContainerView(viewModel: viewModel)
+                }
+            }
+            .background(.black)
         }
+    }
+}
+
+extension ShowsView {
+    static func build() -> some View {
+        let service = ShowsService(network: NetworkClient(session: URLSession.shared))
+        let viewModel = ShowsViewModel(service: service)
+        return ShowsView(viewModel: viewModel)
     }
 }
 

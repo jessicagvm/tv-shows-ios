@@ -8,23 +8,12 @@
 import SwiftUI
 
 struct ShowListCellView: View {
-    let show: Show
+    let show: ShowViewData
     
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
-            AsyncRemoteImage(url: URL(string: show.image?.medium ?? ""))
-                .frame(height: 120)
-                .frame(maxWidth: 100)
-                .clipped()
-                .cornerRadius(8)
-                .shadow(color: .black.opacity(0.6), radius: 4, x: 0, y: 2)
-            
-            Text("\(show.name)")
-                .multilineTextAlignment(.leading)
-                .foregroundColor(.white)
-                .font(.headline)
-                .fontWeight(.medium)
-                .padding(.horizontal, 8)
+            ShowImageView(imageURL: show.imageURL)
+            ShowTitleView(name: show.name)
         }
         .frame(height: 192)
         .frame(maxWidth: .infinity)
@@ -38,5 +27,5 @@ struct ShowListCellView: View {
 }
 
 #Preview {
-    ShowListCellView(show: MockedData.shows[0])
+    ShowListCellView(show: ShowMapper.map(show: MockedData.shows[0]))
 }

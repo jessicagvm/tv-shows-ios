@@ -11,26 +11,25 @@ import Combine
 @MainActor
 final class SearchViewModel: ObservableObject {
     private let service: SearchServiceProtocol
-    private let recommededShows: [Show]
+    private let recommededShows: [ShowViewData]
     private var cancellables = Set<AnyCancellable>()
     let placeholder = "Search shows by name..."
     
     @Published var searchText: String = ""
-    @Published var state: SearchViewState
+    @Published private(set) var state: SearchViewState
     
-    enum SearchViewState {
-        case initial(recommededShows: [Show])
+    enum SearchViewState: Equatable {
+        case initial(recommededShows: [ShowViewData])
         case loading
-        case success(results: [SearchResult])
+        case success(results: [SearchResultViewData])
         case empty(title: String)
         case error
     }
     
-    init(service: SearchServiceProtocol, recommededShows: [Show]) {
+    init(service: SearchServiceProtocol, recommededShows: [ShowViewData]) {
         self.service = service
         self.recommededShows = recommededShows
         self.state = .initial(recommededShows: recommededShows)
-        
         $searchText
             .debounce(for: .milliseconds(400), scheduler: RunLoop.main)
             .removeDuplicates()
@@ -38,10 +37,6 @@ final class SearchViewModel: ObservableObject {
                 Task { await self?.searchShowsBy(name: text) }
             }
             .store(in: &cancellables)
-    }
-    
-    func getRecommededShows(for shows: [Show]) -> [ShowViewData] {
-        return shows.map { ShowMapper.map(show:$0) }
     }
 }
 private extension SearchViewModel {
@@ -62,9 +57,9 @@ private extension SearchViewModel {
     
     func handleSuccess(for results: [SearchResult]) {
         if results.isEmpty {
-            state = .empty(title: "No results found.")
+            state = .empty(title: "No results found")
         } else {
-            let filtered = results.uniqueById()
+            let filtered = SearchResultMapper.map(results: results)
             state = .success(results: filtered)
         }
     }

@@ -17,6 +17,5 @@ struct ShowImageView: View {
             .clipped()
             .cornerRadius(8)
             .shadow(color: .black.opacity(0.6), radius: 4, x: 0, y: 2)
-        
     }
 }

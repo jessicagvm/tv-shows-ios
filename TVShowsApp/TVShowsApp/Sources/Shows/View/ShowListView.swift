@@ -11,31 +11,32 @@ struct ShowListView: View {
     @ObservedObject var viewModel: ShowsViewModel
     
     var body: some View {
-        List(viewModel.shows) { show in
-            let service = ShowDetailService(network: NetworkClient(session: URLSession.shared))
-            let showViewModel = ShowDetailViewModel(service: service, id: show.id)
-            ZStack {
-                NavigationLink(destination: ShowDetailView(viewModel: showViewModel)) {
-                    EmptyView()
+        LazyVStack(spacing: 16) {
+            ForEach(viewModel.showsListViewData) { show in
+                ShowRow(show: show) {
+                    viewModel.handlePaginationIfNeeded(show)
                 }
-                .opacity(0)
-                .buttonStyle(PlainButtonStyle())
-                
-                ShowListCellView(show: show)
-                    .onAppear {
-                        if viewModel.isLastShowShown(show) {
-                            Task {
-                                await viewModel.fetchMoreShows()
-                            }
-                        }
-                    }
             }
-            .listRowBackground(Color.black)
-            .listRowSeparator(.hidden)
+            .background(Color.black)
+            
+            if viewModel.isPaginating {
+                LoadingPage()
+            }
         }
-        .listStyle(.plain)
-        .scrollContentBackground(.hidden)
+        .padding(.horizontal, 16)
         .background(Color.black)
+    }
+}
+
+private struct ShowRow: View {
+    let show: ShowViewData
+    let perform: () -> Void
+    
+    var body: some View {
+        NavigationLink(destination: ShowDetailView.build(for: show)) {
+            ShowListCellView(show: show)
+        }
+        .onAppear(perform: perform)
     }
 }
 

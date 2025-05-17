@@ -11,18 +11,14 @@ struct SearchResultsView: View {
     private let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())]
-    let results: [SearchResult]
+    let results: [SearchResultViewData]
     
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(results) { result in
-                    let service = ShowDetailService(network: NetworkClient(session: URLSession.shared))
-                    let showViewModel = ShowDetailViewModel(service: service, id: result.show.id)
-                    ZStack {
-                        NavigationLink(destination: ShowDetailView(viewModel: showViewModel)) {
-                            ShowListCellView(show: result.show)
-                        }
+                    NavigationLink(destination: ShowDetailView.build(for: result.show)) {
+                        ShowListCellView(show: result.show)
                     }
                 }
             }
@@ -33,5 +29,5 @@ struct SearchResultsView: View {
 }
 
 #Preview {
-    SearchResultsView(results: [SearchResult.init(show: MockedData.shows[0])])
+    SearchResultsView(results: [SearchResultViewData.init(show: ShowMapper.map(show: MockedData.shows[0]))])
 }

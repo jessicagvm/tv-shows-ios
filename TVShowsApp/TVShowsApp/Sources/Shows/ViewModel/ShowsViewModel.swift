@@ -12,33 +12,31 @@ final class ShowsViewModel: ObservableObject {
     private let service: ShowsServiceProtocol
     private var currentPage: Int = 0
     private var isEndList: Bool = false
-    let title = "TV Shows"
-    @Published var shows: [Show] = []
-    @Published var state: ShowsViewState
+    private var hasLoadedOnce = false
+    private var shows: [Show] = []
+    let titleList = "TV Shows & Movies"
+    
+    @Published private(set) var state: ShowsViewState = .idle
+    @Published private(set) var isPaginating: Bool = false
+    @Published private(set) var showsListViewData: [ShowViewData] = []
     
     enum ShowsViewState {
+        case idle
         case loading
-        case loadingPage
-        case success(shows: [Show])
-        case empty(title: String, message: String?)
-        case error(title: String, message: String?, action: (()->())?)
-        
-        var isLoadingPage: Bool {
-            if case .loadingPage = self { return true }
-            return false
-        }
+        case success(shows: ShowsViewData)
+        case empty(title: String, message: String)
+        case error(_ error: ErrorViewData)
     }
     
     init(service: ShowsServiceProtocol) {
         self.service = service
-        self.state = .loading
     }
     
-    func isLastShowShown(_ show: Show) -> Bool {
+    private func isLastShowShown(_ show: ShowViewData) -> Bool {
         // TODO: - Consider migrating pagination trigger to scroll-based detection
-        let isLastItem = show == self.shows.last
+        let isLastItem = show == self.showsListViewData.last
         let hasMoreThanTwoItems = self.shows.count > 2
-
+        
         if isLastItem && hasMoreThanTwoItems {
             return true
         }
@@ -46,19 +44,29 @@ final class ShowsViewModel: ObservableObject {
         return false
     }
     
-    func fetchMoreShows() async {
-        guard !state.isLoadingPage, !isEndList else { return }
-        
-        state = .loadingPage
-        await fetchShows()
+    func handlePaginationIfNeeded(_ show: ShowViewData) {
+        if isLastShowShown(show) {
+            Task {
+                await fetchMoreShows()
+            }
+        }
     }
     
     func fetchInitialShowsPage() async {
+        guard !hasLoadedOnce else { return }
+        hasLoadedOnce = true
         await fetchShows()
     }
 }
 
 private extension ShowsViewModel {
+    func fetchMoreShows() async {
+        guard !isPaginating, !isEndList else { return }
+        isPaginating = true
+        await fetchShows()
+        isPaginating = false
+    }
+    
     func fetchShows() async {
         do {
             let shows = try await service.fetchShows(page: currentPage)
@@ -67,7 +75,9 @@ private extension ShowsViewModel {
             handleError(error)
         }
     }
-    
+}
+
+private extension ShowsViewModel {
     func handleSuccess(for fetchedShows: [Show]) {
         guard fetchedShows.isEmpty else {
             setMoreShows(for: fetchedShows)
@@ -77,8 +87,6 @@ private extension ShowsViewModel {
         if self.shows.isEmpty {
             let error = NetworkError.unknown
             setErrorState(error)
-        } else {
-            state = .success(shows: self.shows)
         }
     }
     
@@ -89,12 +97,20 @@ private extension ShowsViewModel {
             var filteredShows: [Show] = self.shows
             filteredShows.append(contentsOf: fetchedShows)
             filteredShows = filteredShows.uniqueById()
-              
+            
             self.shows = filteredShows
-            state = .success(shows: self.shows)
+            
+            guard let showsViewData = ShowMapper.mapAvailableShows(shows) else { return }
+            
+            self.showsListViewData = showsViewData.shows
+            
+            guard !isPaginating else { return }
+            state = .success(shows: showsViewData)
         }
     }
-    
+}
+
+private extension ShowsViewModel {
     func retry() {
         switch state {
         case .error where shows.isEmpty:
@@ -120,14 +136,13 @@ private extension ShowsViewModel {
         if  let error = error as? NetworkError, error.isNoFoundError {
             self.isEndList = true
         }
-        
-        self.state = .success(shows: self.shows)
     }
     
     func setErrorState(_ error: Error) {
         guard let error = error as? NetworkError, let description = error.description else { return }
-        self.state = .error(title: "Oops! Something went wrong",
-                            message: "\(description)",
-                            action: error.shouldRetry ? { self.retry() } : nil)
+        let errorViewData = ErrorViewData(title: "Oops! Something went wrong",
+                                          message: "\(description)",
+                                          action: error.shouldRetry ? { self.retry() } : nil)
+        self.state = .error(errorViewData)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  RecommendedShowList.swift
+//  RecommendedShowListView.swift
 //  TVShowsApp
 //
 //  Created by Jessica Vasquez on 14/05/2025.
@@ -7,14 +7,12 @@
 
 import SwiftUI
 
-struct RecommendedShowList: View {
+struct RecommendedShowListView: View {
     let recommendedShows: [ShowViewData]
     var body: some View {
         List(recommendedShows) { show in
-            let service = ShowDetailService(network: NetworkClient(session: URLSession.shared))
-            let showViewModel = ShowDetailViewModel(service: service, id: show.id)
             ZStack {
-                NavigationLink(destination: ShowDetailView(viewModel: showViewModel)) {
+                NavigationLink(destination: ShowDetailView.build(for: show)) {
                     EmptyView()
                 }
                 .opacity(0)
@@ -32,5 +30,5 @@ struct RecommendedShowList: View {
 }
 
 #Preview {
-    RecommendedShowList(recommendedShows: ShowMapper.map(shows: MockedData.shows))
+    RecommendedShowListView(recommendedShows: ShowMapper.map(shows: MockedData.shows))
 }
