@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SearchResult: Decodable, Identifiable {
+struct SearchResult: Equatable, Decodable, Identifiable {
     let show: Show
     var id: Int { show.id }
 }
